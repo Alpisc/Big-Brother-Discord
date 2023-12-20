@@ -51,4 +51,12 @@ async def _unmute(interaction: discord.Interaction, member: discord.Member):
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
+@client.tree.command(name="rename", description="Renames a member")
+async def _rename(interaction: discord.Interaction, member: discord.Member, *, name: str):
+    if interaction.user.guild_permissions.manage_nicknames:
+        await member.edit(nick=name)
+        await interaction.response.send_message(f"Renamed {member.mention} to {name}")
+    else:
+        await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
 client.run(TOKEN)
