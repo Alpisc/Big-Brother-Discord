@@ -87,5 +87,7 @@ async def _urbandictionary(interaction: discord.Interaction, term: str):
                     await interaction.response.send_message(f"Term: {term}\nDefinition: {definition}\nExample: `{example}`\n\nAuthor: {author}\nThumbs Up: {thumbs_up} - Thumbs Down: {thumbs_down}")
                 except Exception as e:
                     await interaction.response.send_message(f"No results found for term \"{term}\"", ephemeral=True)
+            else:
+                await interaction.response.send_message("Something went wrong while searching Urban Dictionary", ephemeral=True)
 
 client.run(TOKEN)
