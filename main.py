@@ -28,7 +28,7 @@ async def _ping(interaction: discord.Interaction):
 
 @client.tree.command(name="move", description="Moves all members between voice channels")
 async def _move(interaction: discord.Interaction, from_channel: discord.VoiceChannel, to_channel: discord.VoiceChannel):
-    if interaction.user.guild_permissions.administrator:
+    if interaction.user.guild_permissions.move_members:
         for member in from_channel.members:
             await member.move_to(to_channel)
         await interaction.response.send_message(f"Moved all members from {from_channel.mention} to {to_channel.mention}")
