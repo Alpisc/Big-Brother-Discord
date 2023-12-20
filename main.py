@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv('TOKEN')
+WELCOMECHANNELID = os.getenv('WELCOMECHANNELID')
+USERROLEID = os.getenv('USERROLEID')
 
 client = commands.Bot(command_prefix='-', intents=discord.Intents.all())
 
@@ -19,8 +21,8 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1185982616315371560)
-    await channel.send(f'Welcome to the server {member.mention}! Make sure to read the {client.get_channel(1185997047766196335).mention} and have fun!')
-    role = discord.utils.get(member.guild.roles, id=1185980965340852414)
+    await channel.send(f'Welcome to the server {member.mention}! Make sure to read the {client.get_channel(WELCOMECHANNELID).mention} and have fun!')
+    role = discord.utils.get(member.guild.roles, id=USERROLEID)
     await member.add_roles(role)
 
 @client.tree.command(name="ping", description="Shows the bot's latency")
