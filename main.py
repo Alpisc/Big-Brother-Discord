@@ -35,4 +35,20 @@ async def _move(interaction: discord.Interaction, from_channel: discord.VoiceCha
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
+@client.tree.command(name="mute", description="Mutes a member")
+async def _mute(interaction: discord.Interaction, member: discord.Member):
+    if interaction.user.guild_permissions.mute_members:
+        await member.edit(mute=True)
+        await interaction.response.send_message(f"Muted {member.mention}")
+    else:
+        await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
+@client.tree.command(name="unmute", description="Unmutes a member")
+async def _unmute(interaction: discord.Interaction, member: discord.Member):
+    if interaction.user.guild_permissions.mute_members:
+        await member.edit(mute=False)
+        await interaction.response.send_message(f"Unmuted {member.mention}")
+    else:
+        await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
 client.run(TOKEN)
