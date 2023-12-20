@@ -6,22 +6,22 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-TOKEN = os.getenv('TOKEN')
-WELCOMECHANNELID = os.getenv('WELCOMECHANNELID')
-USERROLEID = os.getenv('USERROLEID')
+TOKEN = os.getenv("TOKEN")
+WELCOMECHANNELID = os.getenv("WELCOMECHANNELID")
+USERROLEID = os.getenv("USERROLEID")
 
-client = commands.Bot(command_prefix='-', intents=discord.Intents.all())
+client = commands.Bot(command_prefix="-", intents=discord.Intents.all())
 
 @client.event
 async def on_ready():
     await client.tree.sync()
-    await client.change_presence(activity=discord.activity.Activity(type=discord.ActivityType.watching, name='You'), status=discord.Status.do_not_disturb)
-    print(f'{client.user.name} has connected to Discord!')
+    await client.change_presence(activity=discord.activity.Activity(type=discord.ActivityType.watching, name="You"), status=discord.Status.do_not_disturb)
+    print(f"{client.user.name} has connected to Discord!")
 
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(1185982616315371560)
-    await channel.send(f'Welcome to the server {member.mention}! Make sure to read the {client.get_channel(WELCOMECHANNELID).mention} and have fun!')
+    await channel.send(f"Welcome to the server {member.mention}! Make sure to read the {client.get_channel(WELCOMECHANNELID).mention} and have fun!")
     role = discord.utils.get(member.guild.roles, id=USERROLEID)
     await member.add_roles(role)
 
@@ -72,15 +72,15 @@ async def _purge(interaction: discord.Interaction, amount: int):
 
 @client.tree.command(name="urbandictionary", description="Searches Urban Dictionary for a term")
 async def _urbandictionary(interaction: discord.Interaction, term: str):
-    url = f'http://api.urbandictionary.com/v0/define?term={term}'
+    url = f"http://api.urbandictionary.com/v0/define?term={term}"
     response = r.get(url)
     data = response.json()
     try:
-        definition = data['list'][0]['definition'].replace("[", "").replace("]", "")
-        example = data['list'][0]['example'].replace("[", "").replace("]", "").replace("\r\n", "")
-        author = data['list'][0]['author']
-        thumbs_up = data['list'][0]['thumbs_up']
-        thumbs_down = data['list'][0]['thumbs_down']
+        definition = data["list"][0]["definition"].replace("[", "").replace("]", "")
+        example = data["list"][0]["example"].replace("[", "").replace("]", "").replace("\r\n", "")
+        author = data["list"][0]["author"]
+        thumbs_up = data["list"][0]["thumbs_up"]
+        thumbs_down = data["list"][0]["thumbs_down"]
         await interaction.response.send_message(f"Term: {term}\nDefinition: {definition}\nExample: {example}\n\nAuthor: {author}\nThumbs Up: {thumbs_up} - Thumbs Down: {thumbs_down}")
     except Exception as e:
         await interaction.response.send_message(f"No results found for term \"{term}\"", ephemeral=True)
