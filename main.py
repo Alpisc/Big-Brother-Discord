@@ -59,4 +59,12 @@ async def _rename(interaction: discord.Interaction, member: discord.Member, *, n
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
+@client.tree.command(name="purge", description="Purges a specified amount of messages")
+async def _purge(interaction: discord.Interaction, amount: int):
+    if interaction.user.guild_permissions.manage_messages:
+        await interaction.channel.purge(limit=amount)
+        await interaction.response.send_message(f"Purged {amount} messages")
+    else:
+        await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
 client.run(TOKEN)
