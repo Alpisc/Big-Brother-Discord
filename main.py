@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import requests as r
 
 import os
 from dotenv import load_dotenv
@@ -66,5 +67,20 @@ async def _purge(interaction: discord.Interaction, amount: int):
         await interaction.response.send_message(f"Purged {amount} messages")
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
+@client.tree.command(name="urbandictionary", description="Searches Urban Dictionary for a term")
+async def _urbandictionary(interaction: discord.Interaction, term: str):
+    url = f'http://api.urbandictionary.com/v0/define?term={term}'
+    response = r.get(url)
+    data = response.json()
+    try:
+        definition = data['list'][0]['definition'].replace("[", "").replace("]", "")
+        example = data['list'][0]['example'].replace("[", "").replace("]", "").replace("\r\n", "")
+        author = data['list'][0]['author']
+        thumbs_up = data['list'][0]['thumbs_up']
+        thumbs_down = data['list'][0]['thumbs_down']
+        await interaction.response.send_message(f"Term: {term}\nDefinition: {definition}\nExample: {example}\n\nAuthor: {author}\nThumbs Up: {thumbs_up} - Thumbs Down: {thumbs_down}")
+    except Exception as e:
+        await interaction.response.send_message(f"No results found for term \"{term}\"", ephemeral=True)
 
 client.run(TOKEN)
