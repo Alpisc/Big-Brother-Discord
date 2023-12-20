@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import requests as r
+import time
 
 import os
 from dotenv import load_dotenv
@@ -66,7 +67,9 @@ async def _rename(interaction: discord.Interaction, member: discord.Member, *, n
 async def _purge(interaction: discord.Interaction, amount: int):
     if interaction.user.guild_permissions.manage_messages:
         await interaction.channel.purge(limit=amount)
-        await interaction.response.send_message(f"Purged {amount} messages")
+        msg = await interaction.response.send_message(f"Purged {amount} messages")
+        time.sleep(5)
+        await msg.delete()
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
@@ -81,7 +84,7 @@ async def _urbandictionary(interaction: discord.Interaction, term: str):
         author = data["list"][0]["author"]
         thumbs_up = data["list"][0]["thumbs_up"]
         thumbs_down = data["list"][0]["thumbs_down"]
-        await interaction.response.send_message(f"Term: {term}\nDefinition: {definition}\nExample: {example}\n\nAuthor: {author}\nThumbs Up: {thumbs_up} - Thumbs Down: {thumbs_down}")
+        await interaction.response.send_message(f"Term: {term}\nDefinition: {definition}\nExample: `{example}`\n\nAuthor: {author}\nThumbs Up: {thumbs_up} - Thumbs Down: {thumbs_down}")
     except Exception as e:
         await interaction.response.send_message(f"No results found for term \"{term}\"", ephemeral=True)
 
