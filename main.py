@@ -36,7 +36,7 @@ async def on_member_remove(member):
 async def on_message_edit(before, after):
     if before.content != after.content:
         channel = client.get_channel(EDITEDLOGCHANNELID)
-        embed = discord.Embed(title="Message edited", timestamp=after.created_at)
+        embed = discord.Embed(title=f"Message edited in {before.channel.mention}", timestamp=after.created_at)
         embed.set_author(name=before.author, url=after.jump_url , icon_url=before.author.display_avatar.url)
         embed.add_field(name="Before", value=before.content, inline=False)
         embed.add_field(name="After", value=after.content, inline=False)
@@ -45,9 +45,9 @@ async def on_message_edit(before, after):
 @client.event
 async def on_message_delete(message):
     channel = client.get_channel(DELETEDLOGCHANNELID)
-    embed = discord.Embed(title="Message deleted", timestamp=message.edited_at)
+    embed = discord.Embed(title=f"Message deleted in {message.channel.mention}", timestamp=message.edited_at)
     embed.set_author(name=message.author, icon_url=message.author.display_avatar.url)
-    embed.add_field(name="Message", value=message.content, inline=False)
+    embed.add_field(value=message.content, inline=False)
     await channel.send(embed=embed)
 
 
