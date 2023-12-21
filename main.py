@@ -1,7 +1,5 @@
 import discord
 from discord.ext import commands
-import aiohttp
-import asyncio
 import os
 from dotenv import load_dotenv
 
@@ -38,8 +36,8 @@ async def on_message_edit(before, after):
         channel = client.get_channel(EDITEDLOGCHANNELID)
         embed = discord.Embed(title=f"Message edited in {before.channel.mention}", timestamp=after.created_at)
         embed.set_author(name=before.author, url=after.jump_url , icon_url=before.author.display_avatar.url)
-        embed.add_field(name="Before", value=before.content, inline=False)
-        embed.add_field(name="After", value=after.content, inline=False)
+        embed.add_field(name="Before", value=before.clean_content, inline=False)
+        embed.add_field(name="After", value=after.clean_content, inline=False)
         await channel.send(embed=embed)
 
 @client.event
@@ -47,7 +45,7 @@ async def on_message_delete(message):
     channel = client.get_channel(DELETEDLOGCHANNELID)
     embed = discord.Embed(title=f"Message deleted in {message.channel.mention}", timestamp=message.edited_at)
     embed.set_author(name=message.author, icon_url=message.author.display_avatar.url)
-    embed.add_field(name="", value=message.content, inline=False)
+    embed.add_field(name="", value=message.clean_content, inline=False)
     await channel.send(embed=embed)
 
 
@@ -93,9 +91,7 @@ async def _rename(interaction: discord.Interaction, member: discord.Member, *, n
 async def _purge(interaction: discord.Interaction, amount: int):
     if interaction.user.guild_permissions.manage_messages:
         await interaction.channel.purge(limit=amount)
-        msg = await interaction.response.send_message(f"Purged {amount} messages")
-        await asyncio.sleep(5)
-        await msg.delete()
+        msg = await interaction.response.send_message(f"Purged {amount} messages", ephemeral=True)
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
