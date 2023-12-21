@@ -47,7 +47,7 @@ async def on_message_delete(message):
     channel = client.get_channel(DELETEDLOGCHANNELID)
     embed = discord.Embed(title=f"Message deleted in {message.channel.mention}", timestamp=message.edited_at)
     embed.set_author(name=message.author, icon_url=message.author.display_avatar.url)
-    embed.add_field(value=message.content, inline=False)
+    embed.add_field(name="", value=message.content, inline=False)
     await channel.send(embed=embed)
 
 
