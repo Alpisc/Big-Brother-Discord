@@ -9,6 +9,8 @@ load_dotenv()
 TOKEN = os.getenv("TOKEN")
 WELCOMECHANNELID = os.getenv("WELCOMECHANNELID")
 USERROLEID = os.getenv("USERROLEID")
+EDITEDLOGCHANNELID = os.getenv("EDITEDLOGCHANNELID")
+DELETEDLOGCHANNELID = os.getenv("DELETEDLOGCHANNELID") 
 
 client = commands.Bot(command_prefix="-", intents=discord.Intents.all())
 
@@ -24,6 +26,31 @@ async def on_member_join(member):
     await channel.send(f"Welcome to the server {member.mention}! Make sure to read the {client.get_channel(WELCOMECHANNELID).mention} and have fun!")
     role = discord.utils.get(member.guild.roles, id=USERROLEID)
     await member.add_roles(role)
+
+@client.event
+async def on_member_remove(member):
+    channel = client.get_channel(WELCOMECHANNELID)
+    await channel.send(f"{member.mention} has left the server")
+
+@client.event
+async def on_message_edit(before, after):
+    if before.content != after.content:
+        channel = client.get_channel(EDITEDLOGCHANNELID)
+        embed = discord.Embed(title="Message edited", timestamp=after.created_at)
+        embed.set_author(name=before.author, url=after.jump_url , icon_url=before.author.avatar_url)
+        embed.add_field(name="Before", value=before.content, inline=False)
+        embed.add_field(name="After", value=after.content, inline=False)
+        await channel.send(embed=embed)
+
+@client.event
+async def on_message_delete(message):
+    channel = client.get_channel(DELETEDLOGCHANNELID)
+    embed = discord.Embed(title="Message deleted", timestamp=message.edited_at)
+    embed.set_author(name=message.author, icon_url=message.author.avatar_url)
+    embed.add_field(name="Message", value=message.content, inline=False)
+    await channel.send(embed=embed)
+
+
 
 @client.tree.command(name="ping", description="Shows the bot's latency")
 async def _ping(interaction: discord.Interaction):
