@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
 WELCOMECHANNELID = int(os.getenv("WELCOMECHANNELID"))
+RULECHANNELID = int(os.getenv("RULECHANNELID"))
 USERROLEID = int(os.getenv("USERROLEID"))
 EDITEDLOGCHANNELID = int(os.getenv("EDITEDLOGCHANNELID"))
 DELETEDLOGCHANNELID = int(os.getenv("DELETEDLOGCHANNELID"))
@@ -21,7 +22,7 @@ async def on_ready():
 @client.event
 async def on_member_join(member):
     channel = client.get_channel(WELCOMECHANNELID)
-    await channel.send(f"Welcome to the server {member.mention}! Make sure to read the {client.get_channel(WELCOMECHANNELID).mention} and have fun!")
+    await channel.send(f"Welcome to the server {member.mention}! Make sure to read the {client.get_channel(RULECHANNELID).mention} and have fun!")
     role = discord.utils.get(member.guild.roles, id=USERROLEID)
     await member.add_roles(role)
 
