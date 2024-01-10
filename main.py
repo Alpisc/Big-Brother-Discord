@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
+from anime_api.apis import NekosAPI
+import typing
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
@@ -12,6 +14,8 @@ EDITEDLOGCHANNELID = int(os.getenv("EDITEDLOGCHANNELID"))
 DELETEDLOGCHANNELID = int(os.getenv("DELETEDLOGCHANNELID"))
 
 client = commands.Bot(command_prefix="-", intents=discord.Intents.all())
+
+nekos = NekosAPI()
 
 @client.event
 async def on_ready():
@@ -95,5 +99,13 @@ async def _purge(interaction: discord.Interaction, amount: int):
         msg = await interaction.response.send_message(f"Purged {amount} messages", ephemeral=True)
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
+@client.tree.command(name="neko", description="Sends a random neko image")
+async def _neko(interaction: discord.Interaction, category: typing.Optional[str] = "kemonomimi"):
+    categories = nekos.get_categories(limit=10, offset=0, search=f"%?{category}%?")
+    if categories == []:
+        await interaction.response.send_message("No categories found", ephemeral=True)
+    else:
+        await interaction.response.send_message(nekos.get_random_image(categories=[category[0].name]).url)
 
 client.run(TOKEN)
