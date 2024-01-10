@@ -100,13 +100,4 @@ async def _purge(interaction: discord.Interaction, amount: int):
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
 
-@client.tree.command(name="neko", description="Sends a random neko image")
-async def _neko(interaction: discord.Interaction, category: typing.Optional[str] = "kemonomimi"):
-    await interaction.response.defer()
-    categories = nekos.get_categories(limit=10, offset=0, search=f"%?{category}%?")
-    if categories == []:
-        await interaction.response.send_message("No categories found", ephemeral=True)
-    else:
-        await interaction.response.send_message(nekos.get_random_image(categories=[category[0]]).url)
-
 client.run(TOKEN)
