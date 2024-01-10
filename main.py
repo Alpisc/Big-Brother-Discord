@@ -102,6 +102,7 @@ async def _purge(interaction: discord.Interaction, amount: int):
 
 @client.tree.command(name="neko", description="Sends a random neko image")
 async def _neko(interaction: discord.Interaction, category: typing.Optional[str] = "kemonomimi"):
+    await interaction.response.defer()
     categories = nekos.get_categories(limit=10, offset=0, search=f"%?{category}%?")
     if categories == []:
         await interaction.response.send_message("No categories found", ephemeral=True)
