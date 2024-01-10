@@ -107,6 +107,6 @@ async def _neko(interaction: discord.Interaction, category: typing.Optional[str]
     if categories == []:
         await interaction.response.send_message("No categories found", ephemeral=True)
     else:
-        await interaction.response.send_message(nekos.get_random_image(categories=[category[0].name]).url)
+        await interaction.response.send_message(nekos.get_random_image(categories=[category[0]]).url)
 
 client.run(TOKEN)
