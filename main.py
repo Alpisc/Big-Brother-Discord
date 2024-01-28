@@ -2,8 +2,9 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from anime_api.apis import NekosAPI
 import typing
+import requests
+from io import BytesIO
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
@@ -14,8 +15,6 @@ EDITEDLOGCHANNELID = int(os.getenv("EDITEDLOGCHANNELID"))
 DELETEDLOGCHANNELID = int(os.getenv("DELETEDLOGCHANNELID"))
 
 client = commands.Bot(command_prefix="-", intents=discord.Intents.all())
-
-nekos = NekosAPI()
 
 @client.event
 async def on_ready():
@@ -99,5 +98,13 @@ async def _purge(interaction: discord.Interaction, amount: int):
         msg = await interaction.response.send_message(f"Purged {amount} messages", ephemeral=True)
     else:
         await interaction.response.send_message("You do not have the permissions to use this command", ephemeral=True)
+
+@client.tree.command(name="avatar", description="Shows a member's avatar")
+async def _avatar(interaction: discord.Interaction, member: typing.Optional[discord.Member]):
+    if member is None:
+        member = interaction.user
+
+    image_data = requests.get(member.avatar_url).content
+    await interaction.response.send_message(file=discord.File(BytesIO(image_data), 'profile_picture.png'))
 
 client.run(TOKEN)
