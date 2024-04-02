@@ -104,7 +104,7 @@ async def _avatar(interaction: discord.Interaction, member: typing.Optional[disc
     if member is None:
         member = interaction.user
 
-    image_data = requests.get(member.avatar_url).content
+    image_data = requests.get(member.avatar.url).content
     await interaction.response.send_message(file=discord.File(BytesIO(image_data), 'profile_picture.png'))
 
 client.run(TOKEN)
